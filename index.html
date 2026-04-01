@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estate of Diane C. Harris — Administration Portal v2</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;600&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#1c2a4a;--navy2:#243359;--navy3:#121e38;
+  --gold:#b8972e;--gold2:#d4ae55;--gold3:#e8cc88;--goldpale:#fdf8ed;
+  --bg:#f0ebe0;--cream:#faf7f1;--white:#fff;
+  --text:#22180a;--muted:#7a6d58;--border:#ddd4c0;
+  --green:#2a6444;--red:#8b2020;--warn:#9a6c00;
+  --shadow:0 2px 16px rgba(28,42,74,.1);
+  --fh:"Cinzel",serif;--fb:"EB Garamond",serif;--fu:"Source Sans 3",sans-serif;
+}
+body{font-family:var(--fb);background:var(--bg);color:var(--text);min-height:100vh;font-size:16px}
+button{cursor:pointer;font-family:var(--fu)}
+.hdr{background:var(--navy3);color:#fff;padding:13px 28px;display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid var(--gold);position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(0,0,0,.4)}
+.hdr h1{font-family:var(--fh);font-size:.98rem;font-weight:600;letter-spacing:.07em}
+.hdr .sub{font-family:var(--fu);font-size:.68rem;color:rgba(255,255,255,.45);margin-top:2px;font-style:italic}
+.hdr-r{display:flex;align-items:center;gap:10px}
+.svd{font-family:var(--fu);font-size:.67rem;color:rgba(255,255,255,.35)}
+.tabs{background:var(--navy2);display:flex;overflow-x:auto;border-bottom:2px solid var(--gold);position:sticky;top:62px;z-index:99;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:10px 16px;background:none;border:none;color:rgba(255,255,255,.5);font-family:var(--fu);font-size:.7rem;text-transform:uppercase;letter-spacing:.07em;white-space:nowrap;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .15s}
+.tab:hover{color:var(--gold3)}.tab.on{color:var(--gold2);border-bottom-color:var(--gold2)}
+.pg{padding:22px 28px;max-width:1200px;margin:0 auto}
+.card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px 22px;margin-bottom:18px;box-shadow:var(--shadow)}
+.ctitle{font-family:var(--fh);font-size:.82rem;color:var(--navy);border-bottom:1px solid var(--border);padding-bottom:10px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;letter-spacing:.04em}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+.sbox{background:var(--white);border:1px solid var(--border);border-radius:6px;padding:14px;text-align:center;box-shadow:var(--shadow)}
+.slbl{font-family:var(--fu);font-size:.64rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:5px}
+.sval{font-size:1.3rem;color:var(--navy);font-weight:700;font-family:var(--fu)}
+.ssub{font-size:.68rem;color:var(--muted);margin-top:2px;font-family:var(--fu)}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th{background:var(--navy);color:#fff;padding:8px 10px;text-align:left;font-family:var(--fu);font-size:.65rem;text-transform:uppercase;letter-spacing:.07em;font-weight:600}
+td{padding:7px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#faf7f0}
+tfoot td{background:var(--goldpale)!important;font-weight:700;border-top:2px solid var(--gold);font-family:var(--fu);font-size:.8rem}
+input[type=text],input[type=number],input[type=password],select,textarea{border:1px solid var(--border);border-radius:3px;padding:5px 8px;font-family:var(--fb);font-size:.83rem;background:#fff;width:100%}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--gold);outline-offset:-1px}
+input[type=range]{width:100%;accent-color:var(--gold);cursor:pointer;margin:3px 0}
+.fe{border:none!important;background:transparent!important;font-family:var(--fb);font-size:.83rem;padding:2px 4px!important;min-width:60px}
+.fe:focus{outline:1px solid var(--gold)!important;background:#fffdf5!important}
+.btn{padding:7px 14px;border:none;border-radius:4px;font-family:var(--fu);font-size:.74rem;letter-spacing:.03em;transition:opacity .15s,transform .1s}
+.btn:hover{opacity:.84}.btn:active{transform:scale(.98)}
+.bn{background:var(--navy);color:#fff}.bg{background:var(--gold);color:#fff}
+.bs{background:var(--green);color:#fff}.bd{background:var(--red);color:#fff}
+.bo{background:none;border:1px solid var(--border);color:var(--text)}
+.bxs{padding:3px 8px!important;font-size:.65rem!important}
+.bsm{padding:5px 10px!important;font-size:.72rem!important}
+.bdg{display:inline-block;padding:2px 8px;border-radius:3px;font-family:var(--fu);font-size:.65rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.be{background:var(--gold);color:#fff}
+.bro{background:transparent;border:1px solid rgba(255,255,255,.3);color:rgba(255,255,255,.5)}
+.bpend{background:#fef3c7;color:#92400e}.bprep{background:#dbeafe;color:#1e40af}
+.bsent{background:#fce7f3;color:#9d174d}.back{background:#d1fae5;color:#065f46}
+.b-both{background:#d6eaf8;color:#1a5276}.b-diane{background:#d5f5e3;color:#1e8449}
+.b-illus{background:#fef9e7;color:#7d6608;border:1px solid #f0c040}
+.b-jim{background:#fde8e8;color:#7a1a1a}.b-note{background:#fde8d4;color:#7a3a00}
+.mwrap{position:fixed;inset:0;background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;z-index:200}
+.modal{background:var(--cream);border-radius:10px;padding:36px;width:420px;box-shadow:0 24px 80px rgba(0,0,0,.4);text-align:center;border:1px solid var(--border)}
+.modal-ico{font-size:2.5rem;margin-bottom:10px}
+.modal h2{font-family:var(--fh);color:var(--navy);font-size:.95rem;margin-bottom:8px;letter-spacing:.06em}
+.modal p{font-family:var(--fu);color:var(--muted);font-size:.8rem;margin-bottom:18px;line-height:1.65}
+.merr{color:var(--red);font-family:var(--fu);font-size:.76rem;min-height:18px;margin-bottom:8px}
+.letter-wrap{background:#fff;max-width:720px;margin:0 auto;padding:56px;font-family:var(--fb);font-size:.93rem;line-height:1.95;border:1px solid #ccc;box-shadow:var(--shadow)}
+.letter-wrap p{margin-bottom:14px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:600px){.row2{grid-template-columns:1fr}}
+.nt{background:#fffcf0;border-left:3px solid var(--gold);padding:10px 14px;font-family:var(--fu);font-size:.78rem;color:var(--muted);margin-bottom:14px}
+@media print{.hdr .hdr-r,.tabs,.np{display:none!important}.card{break-inside:avoid;box-shadow:none}.pg{padding:0;max-width:100%}body{font-size:10.5pt}}
+</style>
+</head>
+<body>
+<div id="auth-wrap" class="mwrap">
+  <div class="modal">
+    <div class="modal-ico">&#10022;</div>
+    <h2>Estate of Diane C. Harris</h2>
+    <p>Enter the edit password to unlock data entry, or continue in read-only mode.</p>
+    <input type="password" id="pwd" placeholder="Edit password" style="margin-bottom:10px;text-align:center" onkeydown="if(event.key==='Enter')doLogin()">
+    <div class="merr" id="perr"></div>
+    <div style="display:flex;gap:8px">
+      <button class="btn bn" style="flex:1" onclick="doLogin()">Unlock Edit Mode</button>
+      <button class="btn bo" style="flex:1" onclick="closeAuth()">Read Only</button>
+    </div>
+  </div>
+</div>
+<div class="hdr">
+  <div>
+    <h1>Estate of Diane Catherine Harris &mdash; Administration Portal</h1>
+    <div class="sub">v2 &nbsp;&middot;&nbsp; Co-Executors: Matthew J. Masterson &amp; James Wright &nbsp;&middot;&nbsp; Confidential</div>
+  </div>
+  <div class="hdr-r">
+    <span class="svd" id="svd-lbl"></span>
+    <span id="mode-bdg"></span>
+    <button class="btn bo bxs np" style="border-color:rgba(255,255,255,.25);color:rgba(255,255,255,.55)" id="tog-btn" onclick="toggleMode()">&#128275; Unlock</button>
+    <button class="btn bg bxs np" onclick="window.print()">&#9113; Print / PDF</button>
+  </div>
+</div>
+<div class="tabs">
+  <button class="tab" id="t-ov" onclick="go('ov')">Overview</button>
+  <button class="tab" id="t-as" onclick="go('as')">Assets &amp; Expenses</button>
+  <button class="tab" id="t-bq" onclick="go('bq')">Named Bequests</button>
+  <button class="tab" id="t-p1" onclick="go('p1')">Phase 1 Distribution</button>
+  <button class="tab" id="t-p2" onclick="go('p2')">Phase 2 Distribution</button>
+  <button class="tab" id="t-mn" onclick="go('mn')">Mortgage Notes</button>
+  <button class="tab" id="t-dc" onclick="go('dc')">Documents</button>
+  <button class="tab" id="t-lg" onclick="go('lg')">Legal &amp; Export</button>
+</div>
+<div class="pg" id="pg"></div>
+<script>
+const SB_URL='https://ytsbvrifyhzfpvmkayks.supabase.co';
+const SB_KEY='sb_publishable_HM-eKdDnfb1KbpMtn5gekw_MmDQygRr';
+const EDIT_PASS='DCH2026';
+
+// ── CORRECT PHASE 1 — 49 orgs pulled from live v1 site ──
+const P1_DEF=[
+ {id:1, n:"Missionaries of St. John the Baptist",      cat:"Canon Law / Defense of Faith",  sl:"Illustrative",  sc:"b-illus",pct:1.5,ein:"61-1401192",   status:"Pending",notes:""},
+ {id:2, n:"Pillars of Faith",                          cat:"Canon Law / Defense of Faith",  sl:"Illustrative",  sc:"b-illus",pct:1.5,ein:"Obtain from org",status:"Pending",notes:""},
+ {id:3, n:"Thomas More Society",                       cat:"Canon Law / Rights",             sl:"Both Lists",    sc:"b-both", pct:3.0,ein:"36-4270023",   status:"Pending",notes:""},
+ {id:4, n:"St. Joseph Foundation",                     cat:"Canon Law Rights",               sl:"Both Lists",    sc:"b-both", pct:10.0,ein:"34-1580391",  status:"Pending",notes:"Philip Gray = Alternate Executor — conflict waiver in will Para. 15 & 20B"},
+ {id:5, n:"St. Peter's Roman Catholic Parish — Fr. Amato",cat:"Catholic Education",         sl:"Both Lists",    sc:"b-both", pct:2.5,ein:"Obtain from org",status:"Pending",notes:""},
+ {id:6, n:"Christendom College",                       cat:"Catholic Education",             sl:"Both Lists",    sc:"b-both", pct:3.5,ein:"54-1031437",   status:"Pending",notes:"Legal name: Christendom Educational Corporation"},
+ {id:7, n:"Thomas Aquinas College",                    cat:"Catholic Education",             sl:"Both Lists",    sc:"b-both", pct:3.5,ein:"95-2648707",   status:"Pending",notes:""},
+ {id:8, n:"Chesterton Academy of Buffalo",             cat:"Catholic Education",             sl:"Illustrative",  sc:"b-illus",pct:1.0,ein:"Obtain from org",status:"Pending",notes:""},
+ {id:9, n:"Chesterton Academy of Rochester",           cat:"Catholic Education",             sl:"Illustrative",  sc:"b-illus",pct:1.5,ein:"Obtain from org",status:"Pending",notes:""},
+ {id:10,n:"Collegium Sanctorum Angelorum",             cat:"Catholic Education",             sl:"Illustrative",  sc:"b-illus",pct:1.0,ein:"Obtain from org",status:"Pending",notes:""},
+ {id:11,n:"Immaculate Heart of Mary School",           cat:"Catholic Education",             sl:"Illustrative",  sc:"b-illus",pct:1.0,ein:"Obtain from org",status:"Pending",notes:""},
+ {id:12,n:"Our Lady of the Rosary School",             cat:"Catholic Education",             sl:"Illustrative",  sc:"b-illus",pct:1.0,ein:"Obtain from org",status:"Pending",notes:""},
+ {id:13,n:"Our Lady of Victory School",                cat:"Catholic Education",             sl:"Illustrative",  sc:"b-illus",pct:1.0,ein:"Obtain from org",status:"Pending",notes:""},
+ {id:14,n:"St. John Bosco School",                     cat:"Catholic Education",             sl:"Illustrative",  sc:"b-illus",pct:1.5,ein:"Obtain from org",status:"Pending",notes:""},
+ {id:15,n:"Holy Family Communications / Station of the Cross",cat:"Catholic Media",         sl:"Both Lists",    sc:"b-both", pct:15.0,ein:"16-1612783",  status:"Pending",notes:"Diane's #1 personal gift ($6,000 in 2021)"},
+ {id:16,n:"Lepanto Institute",                         cat:"Catholic Media",                 sl:"Illustrative",  sc:"b-illus",pct:1.0,ein:"46-4008533",   status:"Pending",notes:""},
+ {id:17,n:"LifeSiteNews",                              cat:"Catholic Media",                 sl:"Illustrative",  sc:"b-illus",pct:1.0,ein:"Obtain from org",status:"Pending",notes:"Verify US 501(c)(3) — not Canadian parent"},
+ {id:18,n:"Sensus Fidelium",                           cat:"Catholic Media",                 sl:"Illustrative",  sc:"b-illus",pct:1.0,ein:"Obtain from org",status:"Pending",notes:""},
+ {id:19,n:"Alliance Defending Freedom",                cat:"Christian Rights",               sl:"Both Lists",    sc:"b-both", pct:1.5,ein:"54-1660459",   status:"Pending",notes:""},
+ {id:20,n:"American Society for Defense of TFP",       cat:"Christian Rights",               sl:"Illustrative",  sc:"b-illus",pct:1.0,ein:"23-2611266",   status:"Pending",notes:""},
+ {id:21,n:"Havens Legal Alliance",                     cat:"Christian Rights",               sl:"Illustrative",  sc:"b-illus",pct:3.0,ein:"Obtain from org",status:"Pending",notes:"No website on record — verify 501(c)(3)"},
+ {id:22,n:"St. Paul Center for Biblical Theology",     cat:"Evangelization",                 sl:"Both Lists",    sc:"b-both", pct:2.5,ein:"75-2980638",   status:"Pending",notes:""},
+ {id:23,n:"St. Paul Street Evangelization",            cat:"Evangelization",                 sl:"Both Lists",    sc:"b-both", pct:1.0,ein:"45-4066796",   status:"Pending",notes:""},
+ {id:24,n:"Latin Mass Community — Rochester",          cat:"Latin Mass (Local)",              sl:"Diane Only",    sc:"b-diane",pct:2.5,ein:"Obtain from org",status:"Pending",notes:""},
+ {id:25,n:"Our Lady of Clear Creek Abbey",             cat:"Latin Mass / Monastery",          sl:"Both Lists",    sc:"b-both", pct:3.0,ein:"73-1595800",   status:"Pending",notes:""},
+ {id:26,n:"Priestly Fraternity of St. Peter (FSSP)",   cat:"Latin Mass / Vocations",          sl:"Note Assigned", sc:"b-note", pct:0.0,ein:"23-2769758",  status:"Pending",notes:"Mortgage note $3,000/month — tracked separately"},
+ {id:27,n:"Institute of Christ the King Sovereign Priest",cat:"Latin Mass / Vocations",      sl:"Note Assigned", sc:"b-note", pct:0.0,ein:"36-4390048",  status:"Pending",notes:"Mortgage note $3,000/month — tracked separately"},
+ {id:28,n:"Benedictines of Mary, Queen of Apostles",   cat:"Latin Mass / Vocations",          sl:"Both Lists",    sc:"b-both", pct:2.0,ein:"Obtain from org",status:"Pending",notes:""},
+ {id:29,n:"Corpus Christi Chapel (FSSP)",              cat:"Latin Mass / Vocations",          sl:"Illustrative",  sc:"b-illus",pct:1.5,ein:"Obtain from org",status:"Pending",notes:""},
+ {id:30,n:"Adoremus",                                  cat:"Liturgical Devotions",            sl:"Diane Only",    sc:"b-diane",pct:1.0,ein:"39-1804069",   status:"Pending",notes:""},
+ {id:31,n:"Our Lady's Chapel (Franciscan Friars of the Immaculate)",cat:"Liturgical Devotions",sl:"Illustrative",sc:"b-illus",pct:2.0,ein:"Obtain from org",status:"Pending",notes:""},
+ {id:32,n:"Worldwide Seminary Support",                cat:"Mission Support / TLM",           sl:"Jim Wright",    sc:"b-jim",  pct:1.5,ein:"Obtain from org",status:"Pending",notes:"Requires joint executor endorsement"},
+ {id:33,n:"Diocese of Bukoba-Mwemage",                 cat:"Mission Support",                 sl:"Illustrative",  sc:"b-illus",pct:1.5,ein:"Obtain from org",status:"Pending",notes:"Route through US mission society — no direct foreign gifts"},
+ {id:34,n:"Grace Center Foundation",                   cat:"Mission Support",                 sl:"Illustrative",  sc:"b-illus",pct:1.5,ein:"Obtain from org",status:"Pending",notes:""},
+ {id:35,n:"ROC Love Will End Abortion",                cat:"Pro-Life",                        sl:"Both Lists",    sc:"b-both", pct:1.5,ein:"Obtain from org",status:"Pending",notes:""},
+ {id:36,n:"Community Pregnancy Clinics",               cat:"Pro-Life",                        sl:"Both Lists",    sc:"b-both", pct:1.5,ein:"59-2994215",   status:"Pending",notes:""},
+ {id:37,n:"Population Research Institute",             cat:"Pro-Life",                        sl:"Diane Only",    sc:"b-diane",pct:1.5,ein:"54-1716861",   status:"Pending",notes:""},
+ {id:38,n:"Eternal Choice of Love",                    cat:"Pro-Life",                        sl:"Illustrative",  sc:"b-illus",pct:1.5,ein:"Obtain from org",status:"Pending",notes:"Verified by co-executor"},
+ {id:39,n:"St. Philip Neri House",                     cat:"Promotion of Vocations",          sl:"Illustrative",  sc:"b-illus",pct:1.5,ein:"Obtain from org",status:"Pending",notes:""},
+ {id:40,n:"Carmel of Jesus, Mary, and Joseph",         cat:"Protection of the Latin Mass",    sl:"Illustrative",  sc:"b-illus",pct:1.5,ein:"Obtain from org",status:"Pending",notes:""},
+ {id:41,n:"Daughters of Mary, Mother of Israel's Hope",cat:"Protection of the Latin Mass",   sl:"Illustrative",  sc:"b-illus",pct:2.0,ein:"Obtain from org",status:"Pending",notes:""},
+ {id:42,n:"Discalced Carmelite Monastery of Our Mother of Mercy",cat:"Protection of the Latin Mass",sl:"Illustrative",sc:"b-illus",pct:1.5,ein:"Obtain from org",status:"Pending",notes:""},
+ {id:43,n:"Discalced Hermits of Our Lady of Mt. Carmel",cat:"Protection of the Latin Mass",  sl:"Illustrative",  sc:"b-illus",pct:1.5,ein:"Obtain from org",status:"Pending",notes:""},
+ {id:44,n:"Una Voce Buffalo",                          cat:"Protection of the Latin Mass",    sl:"Illustrative",  sc:"b-illus",pct:0.2,ein:"Obtain from org",status:"Pending",notes:""},
+ {id:45,n:"Pope St. John XXIII Seminary",              cat:"Vocations",                       sl:"Diane Only",    sc:"b-diane",pct:2.0,ein:"04-2104613",   status:"Pending",notes:""},
+ {id:46,n:"Society of the Most Sorrowful Mother",      cat:"Defense of the Faith",            sl:"Jim Wright",    sc:"b-jim",  pct:1.0,ein:"Obtain from org",status:"Pending",notes:"Requires joint executor endorsement"},
+ {id:47,n:"Discalced Carmelite Nuns — Monastery of the Little Flower",cat:"Protection of the Latin Mass",sl:"Jim Wright",sc:"b-jim",pct:1.5,ein:"Obtain from org",status:"Pending",notes:"Requires joint executor endorsement"},
+ {id:48,n:"The Men's March",                           cat:"Pro-Life",                        sl:"Jim Wright",    sc:"b-jim",  pct:0.5,ein:"Obtain from org",status:"Pending",notes:"Requires joint executor endorsement"},
+ {id:49,n:"Saint Michaels Family Protection Institute",cat:"Pro-Life",                        sl:"Jim Wright",    sc:"b-jim",  pct:2.8,ein:"Obtain from org",status:"Pending",notes:"Verified by co-executor"},
+];
+
+const DEFAULTS={
+ meta:{ex1:'Matthew J. Masterson',ex2:'James Wright',phase1_pool:9000000,phase2_pool:0},
+ assets:[
+  {id:1,name:'Trident Investment Accounts (Taxable)',value:850000},
+  {id:2,name:'IRA / Retirement Accounts',value:3650000},
+  {id:3,name:'Cash & Bank Accounts (Pratt)',value:320000},
+  {id:4,name:'Personal Property & Jewelry',value:45000},
+  {id:5,name:'Prudential Annuity (Pending Resolution)',value:0},
+ ],
+ re:[
+  {id:1,name:'Honeye Falls Residence',value:0,status:'Pending Sale'},
+  {id:2,name:'Hall Road Land Parcel',value:0,status:'Pending Sale'},
+ ],
+ exp:[
+  {id:1,name:'Executor Commission — Matthew J. Masterson',value:220000},
+  {id:2,name:'Executor Commission — James Wright',value:220000},
+  {id:3,name:'Legal & Attorney Fees',value:150000},
+  {id:4,name:'Accounting & CPA Fees',value:25000},
+  {id:5,name:'Federal & State Estate Taxes',value:0},
+  {id:6,name:'Property Carrying Costs — Honeye Falls',value:18000},
+  {id:7,name:'Property Carrying Costs — Hall Rd',value:6000},
+  {id:8,name:'Prudential Annuity Resolution Costs',value:0},
+  {id:9,name:'Miscellaneous Estate Expenses',value:15000},
+ ],
+ bq:[
+  {id:1,name:'Donald Quigley (Individual)',ein:'N/A – Individual',value:0,notes:'Per will paragraph'},
+  {id:2,name:'Laura Quigley (Individual)',ein:'N/A – Individual',value:0,notes:'Per will paragraph'},
+  {id:3,name:'North Shore Animal League',ein:'11-1623837',value:0,notes:''},
+  {id:4,name:'EWTN Foundation',ein:'63-0777977',value:0,notes:''},
+  {id:5,name:'Dominican Motherhouse',ein:'Verify with org',value:0,notes:''},
+  {id:6,name:'Carmelite Monastery of Brighton',ein:'Verify with org',value:0,notes:''},
+  {id:7,name:'Right to Life of Greater Rochester',ein:'Verify with org',value:0,notes:''},
+  {id:8,name:'St. Thomas Apostle Church',ein:'N/A – Parish',value:0,notes:''},
+  {id:9,name:'St. Joseph Foundation (Para. 20A Named)',ein:'34-1580391',value:10000,notes:'Named bequest; separate from 5% residuary calc'},
+ ],
+ p1:JSON.parse(JSON.stringify(P1_DEF)),
+ p2:[],
+ mort:{
+  fssp:{org:'Priestly Fraternity of St. Peter (FSSP)',ein:'23-2769758',mo:3000,start:'',pmts:[]},
+  icksp:{org:'Institute of Christ the King Sovereign Priest',ein:'36-4390048',mo:3000,start:'',pmts:[]}
+ },
+ track_log:[]
+};
+
+let S={edit:false,tab:'ov',data:JSON.parse(JSON.stringify(DEFAULTS)),timer:null};
+let db=null;
+(function(){try{if(SB_KEY.indexOf('REPLACE')<0){const{createClient}=supabase;db=createClient(SB_URL,SB_KEY);}}catch(e){}})();
+
+async function dbLoad(){
+ if(!db)return;
+ try{const{data}=await db.from('estate_data').select('*');
+  if(data&&data.length)data.forEach(r=>{if(r.key&&r.value!==undefined)S.data[r.key]=r.value;});}
+ catch(e){console.warn('Load:',e.message);}
+}
+function dbSave(key){
+ if(!S.edit||!db)return;
+ clearTimeout(S.timer);
+ S.timer=setTimeout(async()=>{
+  try{await db.from('estate_data').upsert({key,value:S.data[key]});
+   const el=document.getElementById('svd-lbl');
+   if(el)el.textContent='Saved '+new Date().toLocaleTimeString();}
+  catch(e){console.warn('Save:',e.message);}
+ },800);
+}
+function doLogin(){
+ if(document.getElementById('pwd').value===EDIT_PASS){S.edit=true;document.getElementById('auth-wrap').style.display='none';render();}
+ else document.getElementById('perr').textContent='Incorrect password.';
+}
+function closeAuth(){document.getElementById('auth-wrap').style.display='none';render();}
+function toggleMode(){
+ if(S.edit){S.edit=false;render();}
+ else{document.getElementById('auth-wrap').style.display='flex';document.getElementById('pwd').value='';document.getElementById('perr').textContent='';}
+}
+function go(t){S.tab=t;render();}
+const sum=(a,k)=>(a||[]).reduce((t,i)=>t+(parseFloat(i[k])||0),0);
+const $f=n=>'$'+Math.round(n||0).toLocaleString();
+const pct=n=>(n||0).toFixed(2)+'%';
+const ex=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const nid=a=>a&&a.length?Math.max(...a.map(i=>i.id||0))+1:1;
+function bdg(st){const m={Pending:'bpend',Prepared:'bprep',Sent:'bsent',Acknowledged:'back'};return`<span class="bdg ${m[st]||'bpend'}">${ex(st||'Pending')}</span>`;}
+function slBdg(sl,sc){return`<span class="bdg ${sc||'b-illus'}" style="font-size:.62rem;padding:1px 6px">${ex(sl||'')}</span>`;}
+
+function calc(){
+ const a=sum(S.data.assets,'value'),r=sum(S.data.re,'value'),
+       x=sum(S.data.exp,'value'),b=sum(S.data.bq,'value');
+ const g=a+r,res=Math.max(0,g-x-b),sj5=res*.05,pool=res*.95;
+ const p1pool=parseFloat(S.data.meta?.phase1_pool)||9000000;
+ const pp=sum(S.data.p1,'pct'),pd=(pp/100)*p1pool;
+ return{a,r,g,x,b,res,sj5,pool,p1pool,pp,pd};
+}
+function render(){
+ document.getElementById('mode-bdg').innerHTML=S.edit?'<span class="bdg be">&#9998; Edit Mode</span>':'<span class="bdg bro">&#128065; Read Only</span>';
+ document.getElementById('tog-btn').textContent=S.edit?'&#128274; Lock':'&#128275; Unlock';
+ ['ov','as','bq','p1','p2','mn','dc','lg'].forEach(t=>{const el=document.getElementById('t-'+t);if(el)el.classList.toggle('on',S.tab===t);});
+ const map={ov:rOv,as:rAs,bq:rBq,p1:rP1,p2:rP2,mn:rMn,dc:rDc,lg:rLg};
+ document.getElementById('pg').innerHTML=(map[S.tab]||rOv)();
+}
+
+// ── TAB: OVERVIEW ──
+function rOv(){
+ const t=calc(),o=S.data.p1||[];
+ const sc={Pending:0,Prepared:0,Sent:0,Acknowledged:0};
+ o.forEach(x=>{const k=x.status||'Pending';sc[k]=(sc[k]||0)+1;});
+ return`
+ <div class="sgrid">
+  <div class="sbox"><div class="slbl">Gross Estate</div><div class="sval">${$f(t.g)}</div><div class="ssub">Liquid + Real Estate</div></div>
+  <div class="sbox"><div class="slbl">Est. Expenses</div><div class="sval" style="color:var(--red)">${$f(t.x)}</div></div>
+  <div class="sbox"><div class="slbl">Named Bequests</div><div class="sval" style="color:var(--red)">${$f(t.b)}</div></div>
+  <div class="sbox"><div class="slbl">Net Residuary</div><div class="sval">${$f(t.res)}</div></div>
+  <div class="sbox"><div class="slbl">5% St. Joseph Fdn.</div><div class="sval">${$f(t.sj5)}</div><div class="ssub">Para. 20B mandatory</div></div>
+  <div class="sbox"><div class="slbl">95% Charitable Pool</div><div class="sval" style="color:var(--green)">${$f(t.pool)}</div></div>
+ </div>
+ <div class="card">
+  <div class="ctitle">Phase 1 &mdash; ${o.length} Organizations &nbsp;|&nbsp; ${$f(t.p1pool)} Pool</div>
+  <div style="font-family:var(--fu);font-size:.82rem;display:flex;gap:20px;flex-wrap:wrap;margin-bottom:12px">
+   <span>Allocated: <strong style="color:${t.pp>100?'var(--red)':t.pp>99.5?'var(--green)':'var(--warn)'}">${pct(t.pp)}</strong></span>
+   <span>Dollars: <strong>${$f(t.pd)}</strong></span>
+   <span style="color:var(--warn)">Unallocated: <strong>${$f(t.p1pool-t.pd)}</strong></span>
+   <span style="color:var(--warn)">Catholics for Catholics reserve: <strong>$90,000</strong></span>
+  </div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+   ${Object.entries(sc).map(([s,n])=>`${bdg(s)}<span style="font-family:var(--fu);font-size:.76rem;margin-left:4px;margin-right:12px">${n}</span>`).join('')}
+  </div>
+ </div>
+ <div class="card">
+  <div class="ctitle">Mortgage Notes (Outside Percentage Allocation)</div>
+  <div class="row2">
+   <div style="border:1px solid var(--border);border-radius:5px;padding:14px;font-family:var(--fu);font-size:.82rem">
+    <div style="font-weight:600;margin-bottom:4px">FSSP &mdash; Priestly Fraternity of St. Peter</div>
+    <div style="font-size:1.2rem;font-weight:700;color:var(--navy)">${$f(S.data.mort?.fssp?.mo||3000)}/month</div>
+    <div style="color:var(--muted);font-size:.74rem;margin-top:4px">EIN: 23-2769758 &nbsp;&middot;&nbsp; Payments logged: ${(S.data.mort?.fssp?.pmts||[]).length}</div>
+   </div>
+   <div style="border:1px solid var(--border);border-radius:5px;padding:14px;font-family:var(--fu);font-size:.82rem">
+    <div style="font-weight:600;margin-bottom:4px">ICKSP &mdash; Institute of Christ the King</div>
+    <div style="font-size:1.2rem;font-weight:700;color:var(--navy)">${$f(S.data.mort?.icksp?.mo||3000)}/month</div>
+    <div style="color:var(--muted);font-size:.74rem;margin-top:4px">EIN: 36-4390048 &nbsp;&middot;&nbsp; Payments logged: ${(S.data.mort?.icksp?.pmts||[]).length}</div>
+   </div>
+  </div>
+ </div>
+ <div class="card">
+  <div class="ctitle">Administrative Notes</div>
+  <ul style="font-family:var(--fu);font-size:.79rem;line-height:2.1;padding-left:20px;color:var(--muted)">
+   <li>Catholics for Catholics removed &mdash; 501(c)(4) ineligible &mdash; <strong style="color:var(--warn)">$90,000 held in reserve</strong></li>
+   <li>FSSP and ICKSP receive mortgage notes of $3,000/month each &mdash; outside the % allocation framework</li>
+   <li>St. Joseph Foundation: 10% of Phase 1 pool + 5% net residuary (Para. 20B) + $10,000 named bequest (Para. 20A)</li>
+   <li>Philip C.L. Gray = Alternate Executor AND President of St. Joseph Foundation &mdash; conflict waiver in will Para. 15 &amp; 20B</li>
+   <li>Jim Wright items require joint executor endorsement before disbursement</li>
+   <li>All Phase 1 gifts are unrestricted | All recipients requested to offer Mass for the soul of Diane C. Harris</li>
+   <li>Will excludes: Diocese of Rochester entities, social justice programs, secular social services, anything contra Catholic teaching</li>
+  </ul>
+ </div>`;
+}
+
+// ── TAB: ASSETS & EXPENSES ──
+function rAs(){
+ const t=calc();
+ function tbl(key,label){
+  const arr=S.data[key]||[];
+  const rows=arr.map((item,i)=>`<tr>
+   <td>${S.edit?`<input class="fe" value="${ex(item.name)}" style="width:240px" onchange="S.data['${key}'][${i}].name=this.value;dbSave('${key}');render()">`:`${ex(item.name)}`}</td>
+   <td style="text-align:right">${S.edit?`<input type="number" class="fe" value="${item.value||0}" style="width:110px;text-align:right" onchange="S.data['${key}'][${i}].value=+this.value;dbSave('${key}');render()">`:$f(item.value)}</td>
+   ${key==='re'?`<td>${S.edit?`<input class="fe" value="${ex(item.status||'')}" style="width:110px" onchange="S.data.re[${i}].status=this.value;dbSave('re')">`:ex(item.status||'')}</td>`:``}
+   ${S.edit?`<td><button class="btn bd bxs" onclick="S.data['${key}'].splice(${i},1);dbSave('${key}');render()">&#x2715;</button></td>`:''}</tr>`).join('');
+  return`<div class="card">
+   <div class="ctitle"><span>${label}</span>${S.edit?`<button class="btn bs bsm" onclick="S.data['${key}'].push({id:nid(S.data['${key}']),name:'New Item',value:0${key==='re'?",status:'Pending Sale'":''}});dbSave('${key}');render()">+ Add Row</button>`:''}</div>
+   <table><tr><th style="width:55%">Description</th><th style="text-align:right">Amount</th>${key==='re'?'<th>Status</th>':''}${S.edit?'<th>Del</th>':''}</tr>
+   ${rows}<tfoot><tr><td>Total</td><td style="text-align:right">${$f(sum(arr,'value'))}</td>${key==='re'?'<td></td>':''}${S.edit?'<td></td>':''}</tr></tfoot></table></div>`;
+ }
+ return`
+ <div class="sgrid">
+  <div class="sbox"><div class="slbl">Liquid Assets</div><div class="sval">${$f(t.a)}</div></div>
+  <div class="sbox"><div class="slbl">Real Estate</div><div class="sval">${$f(t.r)}</div></div>
+  <div class="sbox"><div class="slbl">Gross Estate</div><div class="sval">${$f(t.g)}</div></div>
+  <div class="sbox"><div class="slbl">Total Expenses</div><div class="sval" style="color:var(--red)">${$f(t.x)}</div></div>
+  <div class="sbox"><div class="slbl">Named Bequests</div><div class="sval" style="color:var(--red)">${$f(t.b)}</div></div>
+  <div class="sbox"><div class="slbl">Net Residuary</div><div class="sval" style="color:var(--green)">${$f(t.res)}</div></div>
+ </div>
+ ${tbl('assets','Liquid Assets & Personal Property')}
+ ${tbl('re','Real Estate (Pending Liquidation)')}
+ ${tbl('exp','Estate Expenses & Administration Costs')}`;
+}
+
+// ── TAB: NAMED BEQUESTS ──
+function rBq(){
+ const arr=S.data.bq||[];
+ const rows=arr.map((b,i)=>`<tr>
+  <td>${S.edit?`<input class="fe" value="${ex(b.name)}" style="width:200px" onchange="S.data.bq[${i}].name=this.value;dbSave('bq');render()">`:`${ex(b.name)}`}</td>
+  <td><span style="font-family:var(--fu);font-size:.75rem;color:var(--muted)">${S.edit?`<input class="fe" value="${ex(b.ein)}" style="width:120px" onchange="S.data.bq[${i}].ein=this.value;dbSave('bq')">`:ex(b.ein)}</span></td>
+  <td style="text-align:right">${S.edit?`<input type="number" class="fe" value="${b.value||0}" style="width:100px;text-align:right" onchange="S.data.bq[${i}].value=+this.value;dbSave('bq');render()">`:$f(b.value)}</td>
+  <td style="font-family:var(--fu);font-size:.74rem;color:var(--muted)">${ex(b.notes||'')}</td>
+  ${S.edit?`<td><button class="btn bd bxs" onclick="S.data.bq.splice(${i},1);dbSave('bq');render()">&#x2715;</button></td>`:''}</tr>`).join('');
+ return`
+ <div class="nt">Named bequests are fixed will amounts deducted before the residuary calculation. Amounts at $0 pending confirmation of exact will figures.</div>
+ <div class="card">
+  <div class="ctitle"><span>Named Bequests</span>${S.edit?`<button class="btn bs bsm" onclick="S.data.bq.push({id:nid(S.data.bq),name:'New Bequest',ein:'',value:0,notes:''});dbSave('bq');render()">+ Add</button>`:''}</div>
+  <table><tr><th>Recipient</th><th>EIN</th><th style="text-align:right">Amount</th><th>Notes</th>${S.edit?'<th>Del</th>':''}</tr>
+  ${rows}<tfoot><tr><td colspan="2">Total Named Bequests</td><td style="text-align:right">${$f(sum(arr,'value'))}</td><td></td>${S.edit?'<td></td>':''}</tr></tfoot></table>
+ </div>
+ <div class="card">
+  <div class="ctitle">St. Joseph Foundation &mdash; 5% Residuary (Para. 20B, Auto-Calculated)</div>
+  <div style="font-family:var(--fu);font-size:.84rem;line-height:1.9;color:var(--muted)">
+   Para. 20B mandates 5% of net residuary to St. Joseph Foundation, entirely separate from the named $10,000 bequest (Para. 20A) and the 10% Phase 1 allocation.
+   <strong style="color:var(--navy);font-size:1.1rem;display:block;margin-top:8px">${$f(calc().sj5)}</strong>
+   <span style="font-size:.76rem;color:var(--red)">Conflict: Philip C.L. Gray is president of St. Joseph Foundation and alternate executor. Waiver documented in will Para. 15 &amp; 20B.</span>
+  </div>
+ </div>`;
+}
+
+// ── TAB: PHASE 1 ──
+function rP1(){
+ const arr=S.data.p1||[];
+ const t=calc(),pp=sum(arr,'pct');
+ const sOpts=['Pending','Prepared','Sent','Acknowledged'];
+ const rows=arr.map((o,i)=>{
+  const dollars=((o.pct||0)/100)*t.p1pool;
+  const nm=o.n||o.name||'';
+  return`<tr>
+   <td style="text-align:center;font-family:var(--fu);font-size:.7rem;color:var(--muted)">${i+1}</td>
+   <td>
+    ${S.edit?`<input class="fe" value="${ex(nm)}" style="width:195px" onchange="S.data.p1[${i}].n=this.value;S.data.p1[${i}].name=this.value;dbSave('p1');render()">`:
+    `<strong style="font-size:.82rem">${ex(nm)}</strong>`}
+    <div style="margin-top:3px">${slBdg(o.sl||'',o.sc||'b-illus')}</div>
+    ${o.notes?`<div style="font-family:var(--fu);font-size:.68rem;color:var(--warn);margin-top:2px">${ex(o.notes)}</div>`:''}
+   </td>
+   <td style="font-family:var(--fu);font-size:.74rem;color:${(o.ein||'').startsWith('Obtain')?'var(--red)':'var(--muted)'}">
+    ${S.edit?`<input class="fe" value="${ex(o.ein||'')}" style="width:100px" onchange="S.data.p1[${i}].ein=this.value;dbSave('p1')">`:ex(o.ein||'')}
+   </td>
+   <td style="text-align:right">
+    ${S.edit?`<div style="display:flex;align-items:center;gap:4px;justify-content:flex-end">
+     <input type="range" min="0" max="20" step="0.1" value="${o.pct||0}" style="width:70px"
+      oninput="S.data.p1[${i}].pct=+this.value;dbSave('p1');render()">
+     <input type="number" class="fe" value="${o.pct||0}" style="width:44px;text-align:right" step="0.1"
+      onchange="S.data.p1[${i}].pct=+this.value;dbSave('p1');render()">%
+    </div>`:
+    `<span style="font-family:var(--fu);font-weight:700">${pct(o.pct)}</span>`}
+   </td>
+   <td style="text-align:right;font-family:var(--fu);font-weight:700;color:var(--green)">${o.pct===0?'<span style="color:var(--muted)">Note</span>':$f(dollars)}</td>
+   <td style="text-align:center">
+    ${S.edit?`<select class="fe" style="font-family:var(--fu);font-size:.72rem" onchange="S.data.p1[${i}].status=this.value;dbSave('p1');render()">
+     ${sOpts.map(s=>`<option value="${s}"${o.status===s?' selected':''}>${s}</option>`).join('')}
+    </select>`:bdg(o.status)}
+   </td>
+   ${S.edit?`<td><button class="btn bd bxs" onclick="S.data.p1.splice(${i},1);dbSave('p1');render()">&#x2715;</button></td>`:''}</tr>`;
+ }).join('');
+ return`
+ ${t.pp>100?`<div style="background:#fee2e2;border:1px solid #fca5a5;border-radius:5px;padding:10px 14px;margin-bottom:14px;font-family:var(--fu);font-size:.79rem;color:var(--red)">&#9888; Allocations exceed 100% &mdash; reduce before finalizing.</div>`:''}
+ <div class="sgrid">
+  <div class="sbox"><div class="slbl">Pool</div><div class="sval">${$f(t.p1pool)}</div>
+   ${S.edit?`<div style="margin-top:6px"><input type="number" value="${t.p1pool}" style="width:130px;text-align:center;font-size:.78rem" onchange="S.data.meta.phase1_pool=+this.value;dbSave('meta');render()"></div>`:''}</div>
+  <div class="sbox"><div class="slbl">Organizations</div><div class="sval">${arr.length}</div></div>
+  <div class="sbox"><div class="slbl">% Allocated</div><div class="sval" style="color:${t.pp>100?'var(--red)':t.pp>99.5?'var(--green)':'var(--warn)'}">${pct(t.pp)}</div></div>
+  <div class="sbox"><div class="slbl">$ Allocated</div><div class="sval">${$f(t.pd)}</div></div>
+  <div class="sbox"><div class="slbl">Unallocated</div><div class="sval" style="color:var(--warn)">${$f(t.p1pool-t.pd)}</div></div>
+ </div>
+ <div class="card">
+  <div class="ctitle"><span>Phase 1 &mdash; All ${arr.length} Organizations</span>
+   ${S.edit?`<button class="btn bs bsm" onclick="S.data.p1.push({id:nid(S.data.p1),n:'New Organization',name:'New Organization',cat:'',sl:'Illustrative',sc:'b-illus',pct:0,ein:'',status:'Pending',notes:''});dbSave('p1');render()">+ Add Org</button>`:''}
+  </div>
+  <table><tr><th style="width:28px">#</th><th>Organization</th><th>EIN</th><th style="text-align:right">% Share</th><th style="text-align:right">Amount</th><th style="text-align:center">Status</th>${S.edit?'<th>Del</th>':''}</tr>
+  ${rows}
+  <tfoot><tr><td colspan="3">Total</td><td style="text-align:right">${pct(t.pp)}</td><td style="text-align:right">${$f(t.pd)}</td><td>${S.edit?'<td></td>':''}</td></tr></tfoot></table>
+ </div>`;
+}
+
+// ── TAB: PHASE 2 ──
+function rP2(){
+ const arr=S.data.p2||[];
+ const t=calc(),p2pool=Math.max(0,t.pool-t.pd),pp2=sum(arr,'pct');
+ const sOpts=['Pending','Prepared','Sent','Acknowledged'];
+ const rows=arr.map((o,i)=>{
+  const dollars=((o.pct||0)/100)*p2pool;
+  return`<tr>
+   <td style="text-align:center;font-family:var(--fu);font-size:.7rem;color:var(--muted)">${i+1}</td>
+   <td>${S.edit?`<input class="fe" value="${ex(o.n||o.name||'')}" style="width:195px" onchange="S.data.p2[${i}].n=this.value;S.data.p2[${i}].name=this.value;dbSave('p2');render()">`:`<strong>${ex(o.n||o.name||'')}</strong>`}</td>
+   <td style="font-family:var(--fu);font-size:.74rem;color:var(--muted)">${S.edit?`<input class="fe" value="${ex(o.ein||'')}" style="width:100px" onchange="S.data.p2[${i}].ein=this.value;dbSave('p2')">`:ex(o.ein||'')}</td>
+   <td style="text-align:right">
+    ${S.edit?`<div style="display:flex;align-items:center;gap:4px;justify-content:flex-end">
+     <input type="range" min="0" max="20" step="0.1" value="${o.pct||0}" style="width:70px" oninput="S.data.p2[${i}].pct=+this.value;dbSave('p2');render()">
+     <input type="number" class="fe" value="${o.pct||0}" style="width:44px;text-align:right" step="0.1" onchange="S.data.p2[${i}].pct=+this.value;dbSave('p2');render()">%
+    </div>`:`<span style="font-family:var(--fu);font-weight:700">${pct(o.pct)}</span>`}
+   </td>
+   <td style="text-align:right;font-family:var(--fu);font-weight:700;color:var(--green)">${$f(dollars)}</td>
+   <td style="text-align:center">${S.edit?`<select class="fe" style="font-family:var(--fu);font-size:.72rem" onchange="S.data.p2[${i}].status=this.value;dbSave('p2');render()">${sOpts.map(s=>`<option value="${s}"${o.status===s?' selected':''}>${s}</option>`).join('')}</select>`:bdg(o.status)}</td>
+   ${S.edit?`<td><button class="btn bd bxs" onclick="S.data.p2.splice(${i},1);dbSave('p2');render()">&#x2715;</button></td>`:''}</tr>`;
+ }).join('');
+ return`
+ <div class="nt">Phase 2 follows liquidation of Honeye Falls and Hall Road real estate. Pool = 95% charitable pool minus Phase 1 distributions.</div>
+ <div class="sgrid">
+  <div class="sbox"><div class="slbl">95% Pool</div><div class="sval">${$f(t.pool)}</div></div>
+  <div class="sbox"><div class="slbl">Phase 1 Total</div><div class="sval" style="color:var(--red)">${$f(t.pd)}</div></div>
+  <div class="sbox"><div class="slbl">Phase 2 Pool</div><div class="sval" style="color:var(--green)">${$f(p2pool)}</div></div>
+  <div class="sbox"><div class="slbl">% Allocated</div><div class="sval">${pct(pp2)}</div></div>
+  <div class="sbox"><div class="slbl">Orgs</div><div class="sval">${arr.length}</div></div>
+ </div>
+ <div class="card">
+  <div class="ctitle"><span>Phase 2 &mdash; ${arr.length} Organizations</span>
+   ${S.edit?`<button class="btn bs bsm" onclick="S.data.p2.push({id:nid(S.data.p2||[]),n:'New Organization',name:'New Organization',pct:0,ein:'',status:'Pending',notes:''});dbSave('p2');render()">+ Add Org</button>`:''}
+  </div>
+  ${arr.length===0?`<div style="text-align:center;padding:30px;font-family:var(--fu);color:var(--muted);font-size:.85rem">No Phase 2 organizations added yet. Phase 2 will be planned once real estate liquidation is underway.</div>`:
+  `<table><tr><th style="width:28px">#</th><th>Organization</th><th>EIN</th><th style="text-align:right">% Share</th><th style="text-align:right">Amount</th><th style="text-align:center">Status</th>${S.edit?'<th>Del</th>':''}</tr>
+  ${rows}<tfoot><tr><td colspan="3">Total</td><td style="text-align:right">${pct(pp2)}</td><td style="text-align:right">${$f((pp2/100)*p2pool)}</td><td>${S.edit?'<td></td>':''}</td></tr></tfoot></table>`}
+ </div>`;
+}
+
+// ── TAB: MORTGAGE NOTES ──
+function rMn(){
+ if(!S.data.mort)S.data.mort=JSON.parse(JSON.stringify(DEFAULTS.mort));
+ const M=S.data.mort;
+ function noteCard(key,label){
+  const n=M[key]||{};
+  const pmts=n.pmts||[];
+  const total=pmts.reduce((t,p)=>t+(p.amt||0),0);
+  const pRows=pmts.map((p,i)=>`<tr>
+   <td style="font-family:var(--fu);font-size:.76rem">${ex(p.date||'')}</td>
+   <td style="text-align:right;font-family:var(--fu)">${$f(p.amt||0)}</td>
+   <td style="font-family:var(--fu);font-size:.76rem;color:var(--muted)">${ex(p.note||'')}</td>
+   ${S.edit?`<td><button class="btn bd bxs" onclick="S.data.mort['${key}'].pmts.splice(${i},1);dbSave('mort');render()">&#x2715;</button></td>`:''}</tr>`).join('');
+  return`<div class="card">
+   <div class="ctitle"><span>${label}</span>
+    ${S.edit?`<button class="btn bs bsm" onclick="
+     var d=prompt('Payment date (e.g. 04/2026):');
+     var a=parseFloat(prompt('Amount:'));
+     var nt=prompt('Note (optional):');
+     if(d&&!isNaN(a)){S.data.mort['${key}'].pmts.push({date:d,amt:a,note:nt||''});dbSave('mort');render();}
+    ">+ Log Payment</button>`:''}
+   </div>
+   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:16px">
+    <div class="sbox"><div class="slbl">Monthly</div><div class="sval">${$f(n.mo||0)}</div></div>
+    <div class="sbox"><div class="slbl">Annual</div><div class="sval">${$f((n.mo||0)*12)}</div></div>
+    <div class="sbox"><div class="slbl">Payments Logged</div><div class="sval">${pmts.length}</div></div>
+    <div class="sbox"><div class="slbl">Total Paid</div><div class="sval" style="color:var(--green)">${$f(total)}</div></div>
+   </div>
+   <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:14px;font-family:var(--fu);font-size:.8rem">
+    <span><strong>Org:</strong> ${S.edit?`<input class="fe" value="${ex(n.org||'')}" style="width:240px" onchange="S.data.mort['${key}'].org=this.value;dbSave('mort')">`:ex(n.org||'')}</span>
+    <span><strong>EIN:</strong> ${S.edit?`<input class="fe" value="${ex(n.ein||'')}" style="width:100px" onchange="S.data.mort['${key}'].ein=this.value;dbSave('mort')">`:ex(n.ein||'')}</span>
+    <span><strong>Start:</strong> ${S.edit?`<input class="fe" value="${ex(n.start||'')}" style="width:90px" placeholder="MM/YYYY" onchange="S.data.mort['${key}'].start=this.value;dbSave('mort')">`:ex(n.start||'Not set')}</span>
+    <span><strong>Monthly:</strong> ${S.edit?`<input type="number" class="fe" value="${n.mo||0}" style="width:80px" onchange="S.data.mort['${key}'].mo=+this.value;dbSave('mort');render()">`:$f(n.mo||0)}</span>
+   </div>
+   ${pmts.length>0?`<table><tr><th>Date</th><th style="text-align:right">Amount</th><th>Note</th>${S.edit?'<th>Del</th>':''}</tr>
+   ${pRows}<tfoot><tr><td>Total</td><td style="text-align:right">${$f(total)}</td><td></td>${S.edit?'<td></td>':''}</tr></tfoot></table>`:
+   '<div style="font-family:var(--fu);font-size:.8rem;color:var(--muted);padding:8px 0">No payments logged yet.</div>'}
+  </div>`;
+ }
+ return`
+ <div class="nt">Mortgage note payments to FSSP and ICKSP are <strong>outside</strong> the percentage allocation framework. Both organizations must sign a Mortgage Note Assignment Agreement. Annual interest statements are required by January 31 each year.</div>
+ ${noteCard('fssp','FSSP &mdash; Priestly Fraternity of St. Peter')}
+ ${noteCard('icksp','ICKSP &mdash; Institute of Christ the King Sovereign Priest')}`;
+}
+
+// ── TAB: DOCUMENTS ──
+function dianeWriteup(){return`<p>Diane Catherine Harris was a woman of deep Catholic faith, intellectual conviction, and extraordinary generosity. Born and raised in the Catholic tradition, Diane devoted her life to the proposition that the ancient faith, properly understood and faithfully practiced, is the source of all genuine human flourishing. Her personal library, her correspondence, and her financial giving over decades all bore witness to a single animating conviction: that the Church, in her fullness, holds the answer to every question the modern world mistakes for having already answered.</p>
+<p>Diane had little patience for dilution. She supported organizations that held the line &mdash; on doctrine, on liturgy, on human life from conception to natural death, on the family as the irreplaceable cell of civilization. She believed in the Latin Mass, in faithful catechesis, in the formation of priests who would preach without apology, and in the education of young people in the full inheritance of Western Christendom. Her giving reflected this: she gave to seminaries, to colleges, to pro-life legal advocates, to missionaries, and to religious sisters and brothers who had consecrated their lives entirely to God.</p>
+<p>She was also a woman of quiet personal generosity &mdash; loyal to her friends, constant in her prayer, and deeply devoted to the souls of those who had gone before her. She requested, and we earnestly ask of you, that Masses and prayers be offered for the repose of her soul, trusting in the communion of saints and the mercy of God.</p>
+<p>This gift is offered in her memory, and in fidelity to what she stood for. We ask that you be good stewards of it.</p>`;}
+
+function rDc(){
+ const meta=S.data.meta||{};
+ const t=calc();
+ const today=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+ return`
+ <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;font-family:var(--fu)">
+  <button class="btn bn np" onclick="window.print()">&#9113; Print / Export PDF</button>
+ </div>
+ <div class="card">
+  <div class="ctitle">Distribution Letter &mdash; Unified Template (All Recipients)</div>
+  <div style="font-family:var(--fu);font-size:.76rem;color:var(--muted);margin-bottom:14px">Single letter used for all 49 organizations. [Organization Name] and [AMOUNT] are populated per recipient at time of printing.</div>
+  <div class="letter-wrap">
+   <div style="text-align:center;margin-bottom:28px">
+    <div style="font-family:var(--fh);font-size:.95rem;margin-bottom:4px;letter-spacing:.05em">ESTATE OF DIANE CATHERINE HARRIS</div>
+    <div style="font-family:var(--fu);font-size:.76rem;color:var(--muted)">${ex(meta.ex1||'Matthew J. Masterson')} &amp; ${ex(meta.ex2||'James Wright')}, Co-Executors</div>
+    <div style="font-family:var(--fu);font-size:.76rem;color:var(--muted)">${today}</div>
+   </div>
+   <p>Dear Friends,</p>
+   <p>It is our privilege and our duty to inform you that the Estate of Diane Catherine Harris has designated <strong>[Organization Name]</strong> as a beneficiary of the residuary charitable estate. Enclosed please find a check in the amount of <strong>[AMOUNT]</strong>, representing [X]% of the Phase 1 charitable distribution pool.</p>
+   <p>This gift is unrestricted. There are no programmatic conditions attached to it. You may apply it wherever it will do the most good within your mission.</p>
+   <p style="font-family:var(--fh);font-size:.85rem;letter-spacing:.04em;color:var(--navy)">About Diane C. Harris</p>
+   ${dianeWriteup()}
+   <p>We ask one thing of you, not as a condition but as a heartfelt request: please offer Holy Mass or prayers for the repose of the soul of <strong>Diane Catherine Harris</strong>. She believed deeply in the communion of saints and the efficacy of prayer. This would mean more to her memory than any formal acknowledgment.</p>
+   <p>We also ask that you consider sending us a brief note &mdash; or responding to the enclosed stewardship card &mdash; to let us know how this gift will be used. We are keeping a record of the good that Diane's generosity sets in motion.</p>
+   <p>A gift acknowledgment letter for your tax records is enclosed. This gift qualifies as a charitable contribution to your organization's general fund.</p>
+   <p>We are grateful for your work. Diane was grateful for your work. She followed it, she prayed for it, and now, through the generosity she carefully preserved over a lifetime, she continues to support it.</p>
+   <p>In Christ,</p>
+   <br>
+   <div style="display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:10px">
+    <div>
+     <div style="border-bottom:1px solid #999;margin-bottom:6px;height:40px"></div>
+     <div style="font-family:var(--fu);font-size:.8rem"><strong>${ex(meta.ex1||'Matthew J. Masterson')}</strong><br>Co-Executor, Estate of Diane C. Harris</div>
+    </div>
+    <div>
+     <div style="border-bottom:1px solid #999;margin-bottom:6px;height:40px"></div>
+     <div style="font-family:var(--fu);font-size:.8rem"><strong>${ex(meta.ex2||'James Wright')}</strong><br>Co-Executor, Estate of Diane C. Harris</div>
+    </div>
+   </div>
+  </div>
+ </div>
+ <div class="card">
+  <div class="ctitle">Stewardship Follow-Up Email Template</div>
+  <div style="background:#f8f8f8;border:1px solid var(--border);border-radius:5px;padding:18px;font-family:var(--fb);font-size:.88rem;line-height:1.9">
+   <strong>Subject:</strong> Following up &mdash; Gift from the Estate of Diane C. Harris<br><br>
+   Dear [Organization Name],<br><br>
+   We hope this message finds you well. We are writing to follow up on the charitable distribution recently sent to you from the Estate of Diane Catherine Harris.<br><br>
+   Diane cared deeply about the organizations she supported. As co-executors of her estate, we are committed to honoring her memory by keeping a record of the good her generosity makes possible.<br><br>
+   If you are willing, we would welcome a brief response &mdash; a note, a letter, or a short description of how the gift will be used. We are collecting these responses to share with those who loved Diane and to document the legacy she leaves behind.<br><br>
+   You may reply directly to this email, or send a note to: <strong>[Executor Mailing Address]</strong><br><br>
+   We also renew our request: if you are able, please offer Holy Mass or prayers for the soul of Diane Catherine Harris. She would have asked for nothing else.<br><br>
+   Thank you for your ministry. Diane was proud to support it.<br><br>
+   With gratitude,<br>
+   <strong>${ex(meta.ex1||'Matthew J. Masterson')}</strong> and <strong>${ex(meta.ex2||'James Wright')}</strong><br>
+   Co-Executors, Estate of Diane Catherine Harris
+  </div>
+ </div>
+ <div class="card">
+  <div class="ctitle">Gift Acknowledgment (For Recipient Tax Records)</div>
+  <div class="letter-wrap" style="padding:30px">
+   <div style="text-align:center;font-family:var(--fh);font-size:.85rem;margin-bottom:16px;letter-spacing:.05em">GIFT ACKNOWLEDGMENT<br><span style="font-size:.75rem;font-weight:400">Estate of Diane Catherine Harris</span></div>
+   <p>This letter acknowledges receipt of a charitable distribution in the amount of <strong>[AMOUNT]</strong> from the Estate of Diane Catherine Harris, distributed on or about ${today}.</p>
+   <p>This gift is an unrestricted charitable contribution. No goods or services were provided in exchange for this gift. This distribution qualifies as a charitable gift for federal income tax purposes.</p>
+   <p style="font-family:var(--fu);font-size:.8rem;color:var(--muted)">Estate EIN: [To be confirmed with estate counsel] &nbsp;|&nbsp; Phase 1 Charitable Residuary Distribution</p>
+  </div>
+ </div>`;
+}
+
+// ── TAB: LEGAL & EXPORT ──
+function rLg(){
+ const meta=S.data.meta||{};
+ const t=calc();
+ const log=S.data.track_log||[];
+ return`
+ <div class="card">
+  <div class="ctitle">Executor Authorization &amp; Sign-Off</div>
+  <div style="font-family:var(--fu);font-size:.82rem;line-height:1.9;margin-bottom:16px;color:var(--muted)">
+   The undersigned Co-Executors of the Estate of Diane Catherine Harris hereby confirm that the distribution figures recorded in this portal represent their best current understanding of the estate distribution, subject to final legal review and court approval as required by applicable New York State Surrogate's Court procedures.
+   <br><br><strong style="color:var(--navy)">This does not constitute final legal authorization.</strong> All distributions should be reviewed and approved by estate counsel prior to disbursement.
+  </div>
+  <div class="row2">
+   <div style="border:1px solid var(--border);border-radius:5px;padding:16px;font-family:var(--fu);font-size:.82rem">
+    <div style="font-weight:600;margin-bottom:4px">${ex(meta.ex1||'Matthew J. Masterson')}</div>
+    <div style="color:var(--muted);font-size:.76rem;margin-bottom:10px">Co-Executor</div>
+    ${S.edit?`<button class="btn bs bsm" onclick="if(!S.data.legal_sig1){S.data.legal_sig1={name:'${ex(meta.ex1||'')}',ts:new Date().toLocaleString()};dbSave('legal_sig1');render();}">
+     ${S.data.legal_sig1?'&#10003; Confirmed '+ex(S.data.legal_sig1.ts):'Click to Confirm Review'}</button>`:
+    (S.data.legal_sig1?`<span style="color:var(--green);font-size:.78rem">&#10003; Confirmed: ${ex(S.data.legal_sig1.ts)}</span>`:'<span style="color:var(--muted);font-size:.78rem">Not yet confirmed</span>')}
+   </div>
+   <div style="border:1px solid var(--border);border-radius:5px;padding:16px;font-family:var(--fu);font-size:.82rem">
+    <div style="font-weight:600;margin-bottom:4px">${ex(meta.ex2||'James Wright')}</div>
+    <div style="color:var(--muted);font-size:.76rem;margin-bottom:10px">Co-Executor</div>
+    ${S.edit?`<button class="btn bs bsm" onclick="if(!S.data.legal_sig2){S.data.legal_sig2={name:'${ex(meta.ex2||'')}',ts:new Date().toLocaleString()};dbSave('legal_sig2');render();}">
+     ${S.data.legal_sig2?'&#10003; Confirmed '+ex(S.data.legal_sig2.ts):'Click to Confirm Review'}</button>`:
+    (S.data.legal_sig2?`<span style="color:var(--green);font-size:.78rem">&#10003; Confirmed: ${ex(S.data.legal_sig2.ts)}</span>`:'<span style="color:var(--muted);font-size:.78rem">Not yet confirmed</span>')}
+   </div>
+  </div>
+ </div>
+ <div class="card">
+  <div class="ctitle">Distribution Snapshot</div>
+  <table style="font-size:.78rem">
+   <tr><th style="width:60%">Item</th><th style="text-align:right">Value</th></tr>
+   <tr><td>Gross Estate (Liquid)</td><td style="text-align:right;font-family:var(--fu)">${$f(t.a)}</td></tr>
+   <tr><td>Real Estate (Pending)</td><td style="text-align:right;font-family:var(--fu)">${$f(t.r)}</td></tr>
+   <tr><td>Estate Expenses</td><td style="text-align:right;font-family:var(--fu);color:var(--red)">(${$f(t.x)})</td></tr>
+   <tr><td>Named Bequests</td><td style="text-align:right;font-family:var(--fu);color:var(--red)">(${$f(t.b)})</td></tr>
+   <tr style="background:var(--goldpale)"><td><strong>Net Residuary</strong></td><td style="text-align:right;font-family:var(--fu);font-weight:700">${$f(t.res)}</td></tr>
+   <tr><td>5% St. Joseph Foundation (Para. 20B)</td><td style="text-align:right;font-family:var(--fu)">${$f(t.sj5)}</td></tr>
+   <tr><td>95% Charitable Pool</td><td style="text-align:right;font-family:var(--fu)">${$f(t.pool)}</td></tr>
+   <tr><td>Phase 1 Pool</td><td style="text-align:right;font-family:var(--fu)">${$f(t.p1pool)}</td></tr>
+   <tr><td>Phase 1 Allocated (${pct(t.pp)})</td><td style="text-align:right;font-family:var(--fu)">${$f(t.pd)}</td></tr>
+   <tr><td>FSSP Mortgage Note</td><td style="text-align:right;font-family:var(--fu)">${$f((S.data.mort?.fssp?.mo||3000))}/mo</td></tr>
+   <tr><td>ICKSP Mortgage Note</td><td style="text-align:right;font-family:var(--fu)">${$f((S.data.mort?.icksp?.mo||3000))}/mo</td></tr>
+   <tr><td>Catholics for Catholics Reserve</td><td style="text-align:right;font-family:var(--fu);color:var(--warn)">$90,000 held</td></tr>
+  </table>
+ </div>
+ <div class="card">
+  <div class="ctitle"><span>Activity Log</span>
+   ${S.edit?`<button class="btn bo bsm" onclick="var n=prompt('Log entry:');if(n){if(!S.data.track_log)S.data.track_log=[];S.data.track_log.unshift({ts:new Date().toLocaleString(),note:n});dbSave('track_log');render();}">+ Add Entry</button>`:''}
+  </div>
+  ${log.length===0?'<div style="font-family:var(--fu);font-size:.8rem;color:var(--muted)">No entries yet.</div>':
+  log.map((e,i)=>`<div style="border-bottom:1px solid var(--border);padding:8px 0;font-family:var(--fu);font-size:.8rem;display:flex;justify-content:space-between;gap:10px">
+   <div><span style="color:var(--muted);font-size:.73rem">${ex(e.ts)}</span><br>${ex(e.note)}</div>
+   ${S.edit?`<button class="btn bd bxs" style="flex-shrink:0" onclick="S.data.track_log.splice(${i},1);dbSave('track_log');render()">&#x2715;</button>`:''}
+  </div>`).join('')}
+ </div>
+ <div class="card">
+  <div class="ctitle">Attorney Review Checklist</div>
+  <ul style="font-family:var(--fu);font-size:.79rem;line-height:2.1;padding-left:18px;color:var(--muted)">
+   <li>Confirm all Phase 1 recipients qualify as 501(c)(3) organizations</li>
+   <li>Verify EINs for all organizations marked "Obtain from org"</li>
+   <li>Confirm Catholics for Catholics $90,000 reserve disposition</li>
+   <li>Execute Mortgage Note Assignment Agreements for FSSP and ICKSP</li>
+   <li>Confirm Philip C.L. Gray / St. Joseph Foundation conflict of interest waiver on file</li>
+   <li>Obtain Surrogate's Court approval as required under New York EPTL</li>
+   <li>Confirm estate tax status and charitable deduction applicability</li>
+   <li>Resolve Prudential annuity and obtain final valuation</li>
+   <li>Verify LifeSiteNews US 501(c)(3) entity (not Canadian parent)</li>
+   <li>Verify Havens Legal Alliance 501(c)(3) status (no website on record)</li>
+   <li>Confirm Diocese of Bukoba-Mwemage route through US mission society</li>
+  </ul>
+ </div>`;
+}
+
+// ── INIT ──
+window.addEventListener('DOMContentLoaded',async()=>{await dbLoad();render();});
+</script>
+</body>
+</html>
