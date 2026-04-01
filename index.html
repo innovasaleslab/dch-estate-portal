@@ -118,7 +118,7 @@ const SB_URL='https://ytsbvrifyhzfpvmkayks.supabase.co';
 const SB_KEY='sb_publishable_HM-eKdDnfb1KbpMtn5gekw_MmDQygRr';
 const EDIT_PASS='DCH2026';
 
-// ── CORRECT PHASE 1 — 49 orgs pulled from live v1 site ──
+// ── CORRECT PHASE 1 — 49 orgs ──
 const P1_DEF=[
  {id:1, n:"Missionaries of St. John the Baptist",      cat:"Canon Law / Defense of Faith",  sl:"Illustrative",  sc:"b-illus",pct:1.5,ein:"61-1401192",   status:"Pending",notes:""},
  {id:2, n:"Pillars of Faith",                          cat:"Canon Law / Defense of Faith",  sl:"Illustrative",  sc:"b-illus",pct:1.5,ein:"Obtain from org",status:"Pending",notes:""},
@@ -528,7 +528,6 @@ function dianeWriteup(){return`<p>Diane Catherine Harris was a woman of deep Cat
 
 function rDc(){
  const meta=S.data.meta||{};
- const t=calc();
  const today=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
  return`
  <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;font-family:var(--fu)">
@@ -555,31 +554,11 @@ function rDc(){
    <p>In Christ,</p>
    <br>
    <div style="display:grid;grid-template-columns:1fr 1fr;gap:30px;margin-top:10px">
-    <div>
-     <div style="border-bottom:1px solid #999;margin-bottom:6px;height:40px"></div>
-     <div style="font-family:var(--fu);font-size:.8rem"><strong>${ex(meta.ex1||'Matthew J. Masterson')}</strong><br>Co-Executor, Estate of Diane C. Harris</div>
-    </div>
-    <div>
-     <div style="border-bottom:1px solid #999;margin-bottom:6px;height:40px"></div>
-     <div style="font-family:var(--fu);font-size:.8rem"><strong>${ex(meta.ex2||'James Wright')}</strong><br>Co-Executor, Estate of Diane C. Harris</div>
-    </div>
+    <div><div style="border-bottom:1px solid #999;margin-bottom:6px;height:40px"></div>
+     <div style="font-family:var(--fu);font-size:.8rem"><strong>${ex(meta.ex1||'Matthew J. Masterson')}</strong><br>Co-Executor, Estate of Diane C. Harris</div></div>
+    <div><div style="border-bottom:1px solid #999;margin-bottom:6px;height:40px"></div>
+     <div style="font-family:var(--fu);font-size:.8rem"><strong>${ex(meta.ex2||'James Wright')}</strong><br>Co-Executor, Estate of Diane C. Harris</div></div>
    </div>
-  </div>
- </div>
- <div class="card">
-  <div class="ctitle">Stewardship Follow-Up Email Template</div>
-  <div style="background:#f8f8f8;border:1px solid var(--border);border-radius:5px;padding:18px;font-family:var(--fb);font-size:.88rem;line-height:1.9">
-   <strong>Subject:</strong> Following up &mdash; Gift from the Estate of Diane C. Harris<br><br>
-   Dear [Organization Name],<br><br>
-   We hope this message finds you well. We are writing to follow up on the charitable distribution recently sent to you from the Estate of Diane Catherine Harris.<br><br>
-   Diane cared deeply about the organizations she supported. As co-executors of her estate, we are committed to honoring her memory by keeping a record of the good her generosity makes possible.<br><br>
-   If you are willing, we would welcome a brief response &mdash; a note, a letter, or a short description of how the gift will be used. We are collecting these responses to share with those who loved Diane and to document the legacy she leaves behind.<br><br>
-   You may reply directly to this email, or send a note to: <strong>[Executor Mailing Address]</strong><br><br>
-   We also renew our request: if you are able, please offer Holy Mass or prayers for the soul of Diane Catherine Harris. She would have asked for nothing else.<br><br>
-   Thank you for your ministry. Diane was proud to support it.<br><br>
-   With gratitude,<br>
-   <strong>${ex(meta.ex1||'Matthew J. Masterson')}</strong> and <strong>${ex(meta.ex2||'James Wright')}</strong><br>
-   Co-Executors, Estate of Diane Catherine Harris
   </div>
  </div>
  <div class="card">
@@ -609,15 +588,13 @@ function rLg(){
    <div style="border:1px solid var(--border);border-radius:5px;padding:16px;font-family:var(--fu);font-size:.82rem">
     <div style="font-weight:600;margin-bottom:4px">${ex(meta.ex1||'Matthew J. Masterson')}</div>
     <div style="color:var(--muted);font-size:.76rem;margin-bottom:10px">Co-Executor</div>
-    ${S.edit?`<button class="btn bs bsm" onclick="if(!S.data.legal_sig1){S.data.legal_sig1={name:'${ex(meta.ex1||'')}',ts:new Date().toLocaleString()};dbSave('legal_sig1');render();}">
-     ${S.data.legal_sig1?'&#10003; Confirmed '+ex(S.data.legal_sig1.ts):'Click to Confirm Review'}</button>`:
+    ${S.edit?`<button class="btn bs bsm" onclick="if(!S.data.legal_sig1){S.data.legal_sig1={name:'${ex(meta.ex1||'')}',ts:new Date().toLocaleString()};dbSave('legal_sig1');render();}"> ${S.data.legal_sig1?'&#10003; Confirmed '+ex(S.data.legal_sig1.ts):'Click to Confirm Review'}</button>`:
     (S.data.legal_sig1?`<span style="color:var(--green);font-size:.78rem">&#10003; Confirmed: ${ex(S.data.legal_sig1.ts)}</span>`:'<span style="color:var(--muted);font-size:.78rem">Not yet confirmed</span>')}
    </div>
    <div style="border:1px solid var(--border);border-radius:5px;padding:16px;font-family:var(--fu);font-size:.82rem">
     <div style="font-weight:600;margin-bottom:4px">${ex(meta.ex2||'James Wright')}</div>
     <div style="color:var(--muted);font-size:.76rem;margin-bottom:10px">Co-Executor</div>
-    ${S.edit?`<button class="btn bs bsm" onclick="if(!S.data.legal_sig2){S.data.legal_sig2={name:'${ex(meta.ex2||'')}',ts:new Date().toLocaleString()};dbSave('legal_sig2');render();}">
-     ${S.data.legal_sig2?'&#10003; Confirmed '+ex(S.data.legal_sig2.ts):'Click to Confirm Review'}</button>`:
+    ${S.edit?`<button class="btn bs bsm" onclick="if(!S.data.legal_sig2){S.data.legal_sig2={name:'${ex(meta.ex2||'')}',ts:new Date().toLocaleString()};dbSave('legal_sig2');render();}"> ${S.data.legal_sig2?'&#10003; Confirmed '+ex(S.data.legal_sig2.ts):'Click to Confirm Review'}</button>`:
     (S.data.legal_sig2?`<span style="color:var(--green);font-size:.78rem">&#10003; Confirmed: ${ex(S.data.legal_sig2.ts)}</span>`:'<span style="color:var(--muted);font-size:.78rem">Not yet confirmed</span>')}
    </div>
   </div>
