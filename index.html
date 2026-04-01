@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Estate of Diane C. Harris — Administration Portal v2</title>
+<title>Estate of Diane C. Harris â Administration Portal v2</title>
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;600&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
@@ -118,13 +118,13 @@ const SB_URL='https://ytsbvrifyhzfpvmkayks.supabase.co';
 const SB_KEY='sb_publishable_HM-eKdDnfb1KbpMtn5gekw_MmDQygRr';
 const EDIT_PASS='DCH2026';
 
-// ── CORRECT PHASE 1 — 49 orgs ──
+// ââ CORRECT PHASE 1 â 49 orgs ââ
 const P1_DEF=[
  {id:1, n:"Missionaries of St. John the Baptist",      cat:"Canon Law / Defense of Faith",  sl:"Illustrative",  sc:"b-illus",pct:1.5,ein:"61-1401192",   status:"Pending",notes:""},
  {id:2, n:"Pillars of Faith",                          cat:"Canon Law / Defense of Faith",  sl:"Illustrative",  sc:"b-illus",pct:1.5,ein:"Obtain from org",status:"Pending",notes:""},
  {id:3, n:"Thomas More Society",                       cat:"Canon Law / Rights",             sl:"Both Lists",    sc:"b-both", pct:3.0,ein:"36-4270023",   status:"Pending",notes:""},
- {id:4, n:"St. Joseph Foundation",                     cat:"Canon Law Rights",               sl:"Both Lists",    sc:"b-both", pct:10.0,ein:"34-1580391",  status:"Pending",notes:"Philip Gray = Alternate Executor — conflict waiver in will Para. 15 & 20B"},
- {id:5, n:"St. Peter's Roman Catholic Parish — Fr. Amato",cat:"Catholic Education",         sl:"Both Lists",    sc:"b-both", pct:2.5,ein:"Obtain from org",status:"Pending",notes:""},
+ {id:4, n:"St. Joseph Foundation",                     cat:"Canon Law Rights",               sl:"Both Lists",    sc:"b-both", pct:10.0,ein:"34-1580391",  status:"Pending",notes:"Philip Gray = Alternate Executor â conflict waiver in will Para. 15 & 20B"},
+ {id:5, n:"St. Peter's Roman Catholic Parish â Fr. Amato",cat:"Catholic Education",         sl:"Both Lists",    sc:"b-both", pct:2.5,ein:"Obtain from org",status:"Pending",notes:""},
  {id:6, n:"Christendom College",                       cat:"Catholic Education",             sl:"Both Lists",    sc:"b-both", pct:3.5,ein:"54-1031437",   status:"Pending",notes:"Legal name: Christendom Educational Corporation"},
  {id:7, n:"Thomas Aquinas College",                    cat:"Catholic Education",             sl:"Both Lists",    sc:"b-both", pct:3.5,ein:"95-2648707",   status:"Pending",notes:""},
  {id:8, n:"Chesterton Academy of Buffalo",             cat:"Catholic Education",             sl:"Illustrative",  sc:"b-illus",pct:1.0,ein:"Obtain from org",status:"Pending",notes:""},
@@ -136,23 +136,23 @@ const P1_DEF=[
  {id:14,n:"St. John Bosco School",                     cat:"Catholic Education",             sl:"Illustrative",  sc:"b-illus",pct:1.5,ein:"Obtain from org",status:"Pending",notes:""},
  {id:15,n:"Holy Family Communications / Station of the Cross",cat:"Catholic Media",         sl:"Both Lists",    sc:"b-both", pct:15.0,ein:"16-1612783",  status:"Pending",notes:"Diane's #1 personal gift ($6,000 in 2021)"},
  {id:16,n:"Lepanto Institute",                         cat:"Catholic Media",                 sl:"Illustrative",  sc:"b-illus",pct:1.0,ein:"46-4008533",   status:"Pending",notes:""},
- {id:17,n:"LifeSiteNews",                              cat:"Catholic Media",                 sl:"Illustrative",  sc:"b-illus",pct:1.0,ein:"Obtain from org",status:"Pending",notes:"Verify US 501(c)(3) — not Canadian parent"},
+ {id:17,n:"LifeSiteNews",                              cat:"Catholic Media",                 sl:"Illustrative",  sc:"b-illus",pct:1.0,ein:"Obtain from org",status:"Pending",notes:"Verify US 501(c)(3) â not Canadian parent"},
  {id:18,n:"Sensus Fidelium",                           cat:"Catholic Media",                 sl:"Illustrative",  sc:"b-illus",pct:1.0,ein:"Obtain from org",status:"Pending",notes:""},
  {id:19,n:"Alliance Defending Freedom",                cat:"Christian Rights",               sl:"Both Lists",    sc:"b-both", pct:1.5,ein:"54-1660459",   status:"Pending",notes:""},
  {id:20,n:"American Society for Defense of TFP",       cat:"Christian Rights",               sl:"Illustrative",  sc:"b-illus",pct:1.0,ein:"23-2611266",   status:"Pending",notes:""},
- {id:21,n:"Havens Legal Alliance",                     cat:"Christian Rights",               sl:"Illustrative",  sc:"b-illus",pct:3.0,ein:"Obtain from org",status:"Pending",notes:"No website on record — verify 501(c)(3)"},
+ {id:21,n:"Havens Legal Alliance",                     cat:"Christian Rights",               sl:"Illustrative",  sc:"b-illus",pct:3.0,ein:"Obtain from org",status:"Pending",notes:"No website on record â verify 501(c)(3)"},
  {id:22,n:"St. Paul Center for Biblical Theology",     cat:"Evangelization",                 sl:"Both Lists",    sc:"b-both", pct:2.5,ein:"75-2980638",   status:"Pending",notes:""},
  {id:23,n:"St. Paul Street Evangelization",            cat:"Evangelization",                 sl:"Both Lists",    sc:"b-both", pct:1.0,ein:"45-4066796",   status:"Pending",notes:""},
- {id:24,n:"Latin Mass Community — Rochester",          cat:"Latin Mass (Local)",              sl:"Diane Only",    sc:"b-diane",pct:2.5,ein:"Obtain from org",status:"Pending",notes:""},
+ {id:24,n:"Latin Mass Community â Rochester",          cat:"Latin Mass (Local)",              sl:"Diane Only",    sc:"b-diane",pct:2.5,ein:"Obtain from org",status:"Pending",notes:""},
  {id:25,n:"Our Lady of Clear Creek Abbey",             cat:"Latin Mass / Monastery",          sl:"Both Lists",    sc:"b-both", pct:3.0,ein:"73-1595800",   status:"Pending",notes:""},
- {id:26,n:"Priestly Fraternity of St. Peter (FSSP)",   cat:"Latin Mass / Vocations",          sl:"Note Assigned", sc:"b-note", pct:0.0,ein:"23-2769758",  status:"Pending",notes:"Mortgage note $3,000/month — tracked separately"},
- {id:27,n:"Institute of Christ the King Sovereign Priest",cat:"Latin Mass / Vocations",      sl:"Note Assigned", sc:"b-note", pct:0.0,ein:"36-4390048",  status:"Pending",notes:"Mortgage note $3,000/month — tracked separately"},
+ {id:26,n:"Priestly Fraternity of St. Peter (FSSP)",   cat:"Latin Mass / Vocations",          sl:"Note Assigned", sc:"b-note", pct:0.0,ein:"23-2769758",  status:"Pending",notes:"Mortgage note $3,000/month â tracked separately"},
+ {id:27,n:"Institute of Christ the King Sovereign Priest",cat:"Latin Mass / Vocations",      sl:"Note Assigned", sc:"b-note", pct:0.0,ein:"36-4390048",  status:"Pending",notes:"Mortgage note $3,000/month â tracked separately"},
  {id:28,n:"Benedictines of Mary, Queen of Apostles",   cat:"Latin Mass / Vocations",          sl:"Both Lists",    sc:"b-both", pct:2.0,ein:"Obtain from org",status:"Pending",notes:""},
  {id:29,n:"Corpus Christi Chapel (FSSP)",              cat:"Latin Mass / Vocations",          sl:"Illustrative",  sc:"b-illus",pct:1.5,ein:"Obtain from org",status:"Pending",notes:""},
  {id:30,n:"Adoremus",                                  cat:"Liturgical Devotions",            sl:"Diane Only",    sc:"b-diane",pct:1.0,ein:"39-1804069",   status:"Pending",notes:""},
  {id:31,n:"Our Lady's Chapel (Franciscan Friars of the Immaculate)",cat:"Liturgical Devotions",sl:"Illustrative",sc:"b-illus",pct:2.0,ein:"Obtain from org",status:"Pending",notes:""},
  {id:32,n:"Worldwide Seminary Support",                cat:"Mission Support / TLM",           sl:"Jim Wright",    sc:"b-jim",  pct:1.5,ein:"Obtain from org",status:"Pending",notes:"Requires joint executor endorsement"},
- {id:33,n:"Diocese of Bukoba-Mwemage",                 cat:"Mission Support",                 sl:"Illustrative",  sc:"b-illus",pct:1.5,ein:"Obtain from org",status:"Pending",notes:"Route through US mission society — no direct foreign gifts"},
+ {id:33,n:"Diocese of Bukoba-Mwemage",                 cat:"Mission Support",                 sl:"Illustrative",  sc:"b-illus",pct:1.5,ein:"Obtain from org",status:"Pending",notes:"Route through US mission society â no direct foreign gifts"},
  {id:34,n:"Grace Center Foundation",                   cat:"Mission Support",                 sl:"Illustrative",  sc:"b-illus",pct:1.5,ein:"Obtain from org",status:"Pending",notes:""},
  {id:35,n:"ROC Love Will End Abortion",                cat:"Pro-Life",                        sl:"Both Lists",    sc:"b-both", pct:1.5,ein:"Obtain from org",status:"Pending",notes:""},
  {id:36,n:"Community Pregnancy Clinics",               cat:"Pro-Life",                        sl:"Both Lists",    sc:"b-both", pct:1.5,ein:"59-2994215",   status:"Pending",notes:""},
@@ -166,7 +166,7 @@ const P1_DEF=[
  {id:44,n:"Una Voce Buffalo",                          cat:"Protection of the Latin Mass",    sl:"Illustrative",  sc:"b-illus",pct:0.2,ein:"Obtain from org",status:"Pending",notes:""},
  {id:45,n:"Pope St. John XXIII Seminary",              cat:"Vocations",                       sl:"Diane Only",    sc:"b-diane",pct:2.0,ein:"04-2104613",   status:"Pending",notes:""},
  {id:46,n:"Society of the Most Sorrowful Mother",      cat:"Defense of the Faith",            sl:"Jim Wright",    sc:"b-jim",  pct:1.0,ein:"Obtain from org",status:"Pending",notes:"Requires joint executor endorsement"},
- {id:47,n:"Discalced Carmelite Nuns — Monastery of the Little Flower",cat:"Protection of the Latin Mass",sl:"Jim Wright",sc:"b-jim",pct:1.5,ein:"Obtain from org",status:"Pending",notes:"Requires joint executor endorsement"},
+ {id:47,n:"Discalced Carmelite Nuns â Monastery of the Little Flower",cat:"Protection of the Latin Mass",sl:"Jim Wright",sc:"b-jim",pct:1.5,ein:"Obtain from org",status:"Pending",notes:"Requires joint executor endorsement"},
  {id:48,n:"The Men's March",                           cat:"Pro-Life",                        sl:"Jim Wright",    sc:"b-jim",  pct:0.5,ein:"Obtain from org",status:"Pending",notes:"Requires joint executor endorsement"},
  {id:49,n:"Saint Michaels Family Protection Institute",cat:"Pro-Life",                        sl:"Jim Wright",    sc:"b-jim",  pct:2.8,ein:"Obtain from org",status:"Pending",notes:"Verified by co-executor"},
 ];
@@ -185,25 +185,25 @@ const DEFAULTS={
   {id:2,name:'Hall Road Land Parcel',value:0,status:'Pending Sale'},
  ],
  exp:[
-  {id:1,name:'Executor Commission — Matthew J. Masterson',value:220000},
-  {id:2,name:'Executor Commission — James Wright',value:220000},
+  {id:1,name:'Executor Commission â Matthew J. Masterson',value:220000},
+  {id:2,name:'Executor Commission â James Wright',value:220000},
   {id:3,name:'Legal & Attorney Fees',value:150000},
   {id:4,name:'Accounting & CPA Fees',value:25000},
   {id:5,name:'Federal & State Estate Taxes',value:0},
-  {id:6,name:'Property Carrying Costs — Honeye Falls',value:18000},
-  {id:7,name:'Property Carrying Costs — Hall Rd',value:6000},
+  {id:6,name:'Property Carrying Costs â Honeye Falls',value:18000},
+  {id:7,name:'Property Carrying Costs â Hall Rd',value:6000},
   {id:8,name:'Prudential Annuity Resolution Costs',value:0},
   {id:9,name:'Miscellaneous Estate Expenses',value:15000},
  ],
  bq:[
-  {id:1,name:'Donald Quigley (Individual)',ein:'N/A – Individual',value:0,notes:'Per will paragraph'},
-  {id:2,name:'Laura Quigley (Individual)',ein:'N/A – Individual',value:0,notes:'Per will paragraph'},
+  {id:1,name:'Donald Quigley (Individual)',ein:'N/A â Individual',value:0,notes:'Per will paragraph'},
+  {id:2,name:'Laura Quigley (Individual)',ein:'N/A â Individual',value:0,notes:'Per will paragraph'},
   {id:3,name:'North Shore Animal League',ein:'11-1623837',value:0,notes:''},
   {id:4,name:'EWTN Foundation',ein:'63-0777977',value:0,notes:''},
   {id:5,name:'Dominican Motherhouse',ein:'Verify with org',value:0,notes:''},
   {id:6,name:'Carmelite Monastery of Brighton',ein:'Verify with org',value:0,notes:''},
   {id:7,name:'Right to Life of Greater Rochester',ein:'Verify with org',value:0,notes:''},
-  {id:8,name:'St. Thomas Apostle Church',ein:'N/A – Parish',value:0,notes:''},
+  {id:8,name:'St. Thomas Apostle Church',ein:'N/A â Parish',value:0,notes:''},
   {id:9,name:'St. Joseph Foundation (Para. 20A Named)',ein:'34-1580391',value:10000,notes:'Named bequest; separate from 5% residuary calc'},
  ],
  p1:JSON.parse(JSON.stringify(P1_DEF)),
@@ -269,7 +269,7 @@ function render(){
  document.getElementById('pg').innerHTML=(map[S.tab]||rOv)();
 }
 
-// ── TAB: OVERVIEW ──
+// ââ TAB: OVERVIEW ââ
 function rOv(){
  const t=calc(),o=S.data.p1||[];
  const sc={Pending:0,Prepared:0,Sent:0,Acknowledged:0};
@@ -324,7 +324,7 @@ function rOv(){
  </div>`;
 }
 
-// ── TAB: ASSETS & EXPENSES ──
+// ââ TAB: ASSETS & EXPENSES ââ
 function rAs(){
  const t=calc();
  function tbl(key,label){
@@ -353,7 +353,7 @@ function rAs(){
  ${tbl('exp','Estate Expenses & Administration Costs')}`;
 }
 
-// ── TAB: NAMED BEQUESTS ──
+// ââ TAB: NAMED BEQUESTS ââ
 function rBq(){
  const arr=S.data.bq||[];
  const rows=arr.map((b,i)=>`<tr>
@@ -379,7 +379,7 @@ function rBq(){
  </div>`;
 }
 
-// ── TAB: PHASE 1 ──
+// ââ TAB: PHASE 1 ââ
 function rP1(){
  const arr=S.data.p1||[];
  const t=calc(),pp=sum(arr,'pct');
@@ -435,7 +435,7 @@ function rP1(){
  </div>`;
 }
 
-// ── TAB: PHASE 2 ──
+// ââ TAB: PHASE 2 ââ
 function rP2(){
  const arr=S.data.p2||[];
  const t=calc(),p2pool=Math.max(0,t.pool-t.pd),pp2=sum(arr,'pct');
@@ -475,7 +475,7 @@ function rP2(){
  </div>`;
 }
 
-// ── TAB: MORTGAGE NOTES ──
+// ââ TAB: MORTGAGE NOTES ââ
 function rMn(){
  if(!S.data.mort)S.data.mort=JSON.parse(JSON.stringify(DEFAULTS.mort));
  const M=S.data.mort;
@@ -520,7 +520,7 @@ function rMn(){
  ${noteCard('icksp','ICKSP &mdash; Institute of Christ the King Sovereign Priest')}`;
 }
 
-// ── TAB: DOCUMENTS ──
+// ââ TAB: DOCUMENTS ââ
 function dianeWriteup(){return`<p>Diane Catherine Harris was a woman of deep Catholic faith, intellectual conviction, and extraordinary generosity. Born and raised in the Catholic tradition, Diane devoted her life to the proposition that the ancient faith, properly understood and faithfully practiced, is the source of all genuine human flourishing. Her personal library, her correspondence, and her financial giving over decades all bore witness to a single animating conviction: that the Church, in her fullness, holds the answer to every question the modern world mistakes for having already answered.</p>
 <p>Diane had little patience for dilution. She supported organizations that held the line &mdash; on doctrine, on liturgy, on human life from conception to natural death, on the family as the irreplaceable cell of civilization. She believed in the Latin Mass, in faithful catechesis, in the formation of priests who would preach without apology, and in the education of young people in the full inheritance of Western Christendom. Her giving reflected this: she gave to seminaries, to colleges, to pro-life legal advocates, to missionaries, and to religious sisters and brothers who had consecrated their lives entirely to God.</p>
 <p>She was also a woman of quiet personal generosity &mdash; loyal to her friends, constant in her prayer, and deeply devoted to the souls of those who had gone before her. She requested, and we earnestly ask of you, that Masses and prayers be offered for the repose of her soul, trusting in the communion of saints and the mercy of God.</p>
@@ -562,6 +562,22 @@ function rDc(){
   </div>
  </div>
  <div class="card">
+  <div class="ctitle">Stewardship Follow-Up Email Template</div>
+  <div style="background:#f8f8f8;border:1px solid var(--border);border-radius:5px;padding:18px;font-family:var(--fb);font-size:.88rem;line-height:1.9">
+   <strong>Subject:</strong> Following up &mdash; Gift from the Estate of Diane C. Harris<br><br>
+   Dear [Organization Name],<br><br>
+   We hope this message finds you well. We are writing to follow up on the charitable distribution recently sent to you from the Estate of Diane Catherine Harris.<br><br>
+   Diane cared deeply about the organizations she supported. As co-executors of her estate, we are committed to honoring her memory by keeping a record of the good her generosity makes possible.<br><br>
+   If you are willing, we would welcome a brief response &mdash; a note, a letter, or a short description of how the gift will be used. We are collecting these responses to share with those who loved Diane and to document the legacy she leaves behind.<br><br>
+   You may reply directly to this email, or send a note to: <strong>[Executor Mailing Address]</strong><br><br>
+   We also renew our request: if you are able, please offer Holy Mass or prayers for the soul of Diane Catherine Harris. She would have asked for nothing else.<br><br>
+   Thank you for your ministry. Diane was proud to support it.<br><br>
+   With gratitude,<br>
+   <strong>${ex(meta.ex1||'Matthew J. Masterson')}</strong> and <strong>${ex(meta.ex2||'James Wright')}</strong><br>
+   Co-Executors, Estate of Diane Catherine Harris
+  </div>
+ </div>
+ <div class="card">
   <div class="ctitle">Gift Acknowledgment (For Recipient Tax Records)</div>
   <div class="letter-wrap" style="padding:30px">
    <div style="text-align:center;font-family:var(--fh);font-size:.85rem;margin-bottom:16px;letter-spacing:.05em">GIFT ACKNOWLEDGMENT<br><span style="font-size:.75rem;font-weight:400">Estate of Diane Catherine Harris</span></div>
@@ -572,7 +588,7 @@ function rDc(){
  </div>`;
 }
 
-// ── TAB: LEGAL & EXPORT ──
+// ââ TAB: LEGAL & EXPORT ââ
 function rLg(){
  const meta=S.data.meta||{};
  const t=calc();
@@ -645,7 +661,7 @@ function rLg(){
  </div>`;
 }
 
-// ── INIT ──
+// ââ INIT ââ
 window.addEventListener('DOMContentLoaded',async()=>{await dbLoad();render();});
 </script>
 </body>
